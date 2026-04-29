@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Peta Kantor Interaktif</title>
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #e8f5e9, #f1f8f4);
+  margin: 0;
+  text-align: center;
+}
+
+h2 {
+  margin: 15px;
+}
+
+.map-container {
+  position: relative;
+  width: 900px;
+  margin: auto;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.map-image {
+  width: 100%;
+}
+
+/* SVG */
+svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* AREA */
+polygon {
+  fill: rgba(0,0,0,0);
+  stroke: transparent;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+polygon:hover {
+  fill: rgba(0,150,0,0.35);
+  stroke: #2e7d32;
+  stroke-width: 2;
+}
+
+/* TOOLTIP */
+.tooltip {
+  position: absolute;
+  background: #2e7d32;
+  color: white;
+  padding: 5px 10px;
+  font-size: 13px;
+  border-radius: 6px;
+  pointer-events: none;
+  display: none;
+}
+
+/* POPUP */
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  display: none;
+  width: 280px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  border: none;
+  background: #2e7d32;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1b5e20;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2>Peta Kantor Interaktif</h2>
+
+<div class="map-container" id="map">
+
+<img src="denah.png" class="map-image">
+
+<svg viewBox="0 0 1000 700" preserveAspectRatio="none">
+
+<!-- RUANG RAPAT -->
+<polygon points="50,60 420,60 420,230 50,230" data-name="Ruang Rapat"/>
+
+<!-- RUANG PAK KABAN -->
+<polygon points="580,60 950,60 950,230 580,230" data-name="Ruang Pak Kaban"/>
+
+<!-- MUSHOLA + WC -->
+<polygon points="50,250 260,250 260,360 50,360" data-name="Mushola & WC"/>
+
+<!-- PERENCANAAN -->
+<polygon points="50,370 260,370 260,500 50,500" data-name="Perencanaan"/>
+
+<!-- TU -->
+<polygon points="50,510 420,510 420,680 50,680" data-name="TU"/>
+
+<!-- SEKRETARIS -->
+<polygon points="420,470 620,470 620,560 420,560" data-name="Sekretaris"/>
+
+<!-- KEUANGAN -->
+<polygon points="420,560 620,560 620,680 420,680" data-name="Keuangan"/>
+
+<!-- PELAYANAN -->
+<polygon points="580,250 950,250 950,380 580,380" data-name="Pelayanan"/>
+
+<!-- HALAMAN -->
+<polygon points="580,390 950,390 950,680 580,680" data-name="Halaman"/>
+
+</svg>
+
+<div class="tooltip" id="tooltip"></div>
+
+</div>
+
+<!-- POPUP -->
+<div class="popup" id="popup">
+  <h3 id="roomName"></h3>
+  <p id="roomInfo"></p>
+  <button onclick="closePopup()">Tutup</button>
+</div>
+
+<script>
+const polygons = document.querySelectorAll("polygon");
+const tooltip = document.getElementById("tooltip");
+
+polygons.forEach(poly => {
+
+  poly.addEventListener("mousemove", (e) => {
+    tooltip.style.display = "block";
+    tooltip.innerText = poly.dataset.name;
+    tooltip.style.left = e.pageX + 10 + "px";
+    tooltip.style.top = e.pageY - 20 + "px";
+  });
+
+  poly.addEventListener("mouseleave", () => {
+    tooltip.style.display = "none";
+  });
+
+  poly.addEventListener("click", () => {
+    showRoom(poly.dataset.name);
+  });
+
+});
+
+function showRoom(name){
+  document.getElementById("roomName").innerText = name;
+  document.getElementById("roomInfo").innerText = "Ini adalah ruangan " + name;
+  document.getElementById("popup").style.display = "block";
+}
+
+function closePopup(){
+  document.getElementById("popup").style.display = "none";
+}
+</script>
+
+</body>
+</html>
